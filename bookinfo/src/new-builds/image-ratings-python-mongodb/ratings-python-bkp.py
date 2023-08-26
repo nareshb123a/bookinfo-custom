@@ -13,19 +13,13 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', datefmt=
 app = Flask(__name__)
 
 # Env variables
-dbType = "mongodb" if (os.environ.get("DB_TYPE") is None) else os.environ.get("DB_TYPE")
-psqldbHost = "bookinfo1-instance-1.cipmtekhijjz.ap-south-1.rds.amazonaws.com" if (os.environ.get("PDB_HOST") is None) else os.environ.get("PDB_HOST")
-psqldbName = "test" if (os.environ.get("PDB_NAME") is None) else os.environ.get("PDB_NAME")
-psqldbUser = "bookinfo" if (os.environ.get("PDB_USER") is None) else os.environ.get("PDB_USER")
-psqldbPasswd = "postgres" if (os.environ.get("PDB_PASSWD") is None) else os.environ.get("PDB_PASSWD")
-psqldbPort = "5432" if (os.environ.get("PDB_PASSWD") is None) else os.environ.get("PDB_PASSWD")
-mongodbUrl = "mongodb+srv://bookinfo:postgres@cluster0.7ckhkeh.mongodb.net/?retryWrites=true&w=majority" if (os.environ.get("MONGODB_URL") is None) else os.environ.get("MONGODB_URL")
+dbType = "psqldb" if (os.environ.get("DB_TYPE") is None) else os.environ.get("DB_TYPE")
 
 
 @app.route('/ratings/0', methods=['GET'])
 def get_ratings():
     if dbType == 'psqldb':
-        conn = psycopg2.connect(host=psqldbHost, database=psqldbName, user=psqldbUser, password=psqldbPasswd, port=psqldbPort)
+        conn = psycopg2.connect(host='psqldb', database='test', user='bookinfo', password='postgres', port='5432')
         with conn.cursor() as cursor:
             try:
                 cursor.execute('SELECT Rating FROM ratings')
@@ -41,19 +35,31 @@ def get_ratings():
         # DB connection URL
         # conn_str = "mongodb://mongodb:27017/test"
         # Create connection with DB
-        conn = pymongo.MongoClient(mongodbUrl)
+        conn_str = "mongodb+srv://bookinfo:<password>@cluster0.7ckhkeh.mongodb.net/?retryWrites=true&w=majority"
+        conn = pymongo.MongoClient(conn_str)
+        # Create DB
+        # ratings_db = conn['test']
+        # # Create collection (table)
+        # ratings_collection = ratings_db['ratings']
+        # # Create a Record document in Json format
+        # # ratings_data1 = { "rating": 3}
+        # # ratings_data2 = { "rating": 1}
+        # ratings_list = [3, 1]
+        # # Insert the data
+        # res = ratings_collection.insert_many(([{'rating': i} for i in ratings_list]))
+        # logging.info(res.inserted_ids)
+        # logging.info(conn.list_database_names())
         # Reading the document
-        try:
-            db = conn.get_database('test')
-            data = db.get_collection('ratings')
-            res = data.find({})
-            result = {"id": 0, "ratings": {
-                'Reviewer1': res[0]['rating'],
-                'Reviewer2': res[1]['rating']
-            }}
-            return jsonify(result)
-        except Exception as error:
-            logging.info(error)
+        db = conn.get_database('test')
+        data = db.get_collection('ratings')
+        # data.insert_many(([{'rating': i} for i in ratings_list]))
+        # logging.info(data)
+        res = data.find({})
+        result = {"id": 1, "ratings": {
+            'Reviewer1': res[0]['rating'],
+            'Reviewer2': res[1]['rating']
+        }}
+        return jsonify(result)
 
 
 if __name__ == '__main__':
