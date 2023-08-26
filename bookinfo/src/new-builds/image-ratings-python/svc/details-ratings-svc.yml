@@ -10,5 +10,5 @@ spec:
   - port: 9080
     name: http
   selector:
-    app: ratings
+    app: details-ratings
 

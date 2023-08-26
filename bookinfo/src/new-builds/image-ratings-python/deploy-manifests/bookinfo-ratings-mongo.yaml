@@ -20,7 +20,7 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ratings-v2
+  name: ratings-mongodb
   labels:
     app: ratings
     version: v2
@@ -39,25 +39,12 @@ spec:
       serviceAccountName: bookinfo-ratings-v2
       containers:
       - name: ratings
-        image: docker.io/istio/examples-bookinfo-ratings-v2:1.18.0
+        image: 840153049719.dkr.ecr.ap-south-1.amazonaws.com/ratings-python-db
         imagePullPolicy: IfNotPresent
         env:
           # ratings-v2 will use mongodb as the default db backend.
-          # if you would like to use mysqldb then set DB_TYPE = 'mysql', set
-          # the rest of the parameters shown here and also create the
-          # mysqldb service using bookinfo-mysql.yaml
-          # - name: DB_TYPE #default to
-          #   value: "mysql"
-          # - name: MYSQL_DB_HOST
-          #   value: mysqldb
-          # - name: MYSQL_DB_PORT
-          #   value: "3306"
-          # - name: MYSQL_DB_USER
-          #   value: root
-          # - name: MYSQL_DB_PASSWORD
-          #  value: password
           - name: MONGO_DB_URL
-            value: mongodb://mongodb:27017/test
+            value: mongodb+srv://bookinfo:postgres@cluster0.7ckhkeh.mongodb.net/?retryWrites=true&w=majority
         ports:
         - containerPort: 9080
 ---

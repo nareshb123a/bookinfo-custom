@@ -15,33 +15,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ratings-v1
+  name: ratings-psqldb
   labels:
-    app: ratings
+    app: details-ratings
     version: v1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ratings
+      app: details-ratings
       version: v1
   template:
     metadata:
       labels:
-        app: ratings
+        app: details-ratings
         version: v1
     spec:
       serviceAccountName: bookinfo-ratings
       containers:
-      - name: ratings
+      - name: details-ratings
         image: 840153049719.dkr.ecr.ap-south-1.amazonaws.com/ratings-python-db
         imagePullPolicy: Always
         env:
           # ratings-v2 will use mongodb as the default db backend.
-          # if you would like to use mysqldb then you can use this file
-          # which sets DB_TYPE = 'mysql' and the rest of the parameters shown
-          # here and also create the # mysqldb service using bookinfo-mysql.yaml
-          # NOTE: This file is mutually exclusive to bookinfo-ratings-v2.yaml
+          # if you would like to use Postgresqldb then you can use this file
+          # which sets DB_TYPE = 'psqldb' and the rest of the parameters shown
           - name: DB_TYPE
             value: "psqldb"
           - name: PDB_HOST
