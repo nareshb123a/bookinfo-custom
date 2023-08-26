@@ -18,7 +18,7 @@ psqldbHost = "bookinfo1-instance-1.cipmtekhijjz.ap-south-1.rds.amazonaws.com" if
 psqldbName = "test" if (os.environ.get("PDB_NAME") is None) else os.environ.get("PDB_NAME")
 psqldbUser = "bookinfo" if (os.environ.get("PDB_USER") is None) else os.environ.get("PDB_USER")
 psqldbPasswd = "postgres" if (os.environ.get("PDB_PASSWD") is None) else os.environ.get("PDB_PASSWD")
-psqldbPort = "5432" if (os.environ.get("PDB_PASSWD") is None) else os.environ.get("PDB_PASSWD")
+psqldbPort = "5432" if (os.environ.get("PDB_PORT") is None) else os.environ.get("PDB_PORT")
 mongodbUrl = "mongodb+srv://bookinfo:postgres@cluster0.7ckhkeh.mongodb.net/?retryWrites=true&w=majority" if (os.environ.get("MONGODB_URL") is None) else os.environ.get("MONGODB_URL")
 
 
