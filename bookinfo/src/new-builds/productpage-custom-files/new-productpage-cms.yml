@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: productpage-v1
+  labels:
+    app: productpage
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: productpage
+      version: v1
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9080"
+        prometheus.io/path: "/metrics"
+      labels:
+        app: productpage
+        version: v1
+    spec:
+      serviceAccountName: bookinfo-productpage
+      containers:
+      - name: productpage
+        image: docker.io/istio/examples-bookinfo-productpage-v1:1.18.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9080
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: productpage
+          mountPath: /opt/microservices/productpage.py 
+          subPath: productpage.py
+        - name: productpage-html
+          mountPath: /opt/microservices/templates/productpage.html
+          subPath: productpage.html
+      volumes:
+      - name: tmp
+        emptyDir: {}
+      - name: productpage
+        configMap:
+          name: productpage
+          defaultMode: 0755
+      - name: productpage-html
+        configMap:
+          name: productpage-html
+          defaultMode: 0755
+

@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: details-v1
+  labels:
+    app: details
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: details
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: details
+        version: v1
+    spec:
+      serviceAccountName: bookinfo-details
+      containers:
+      - name: details
+        image: docker.io/istio/examples-bookinfo-reviews-v1:1.18.0
+        imagePullPolicy: Always
+        env:
+        - name: LOG_DIR
+          value: "/tmp/logs"
+        - name: SERVICE_VERSION
+          value: "v4-custom"
+        - name: ENABLE_RATINGS
+          value: "true"
+        - name: STAR_COLOR
+          value: "green"
+        - name: RATINGS_HOSTNAME
+          value: "details-ratings"
+        ports:
+        - containerPort: 9080
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: wlp-output
+          mountPath: /opt/ibm/wlp/output
+      volumes:
+      - name: wlp-output
+        emptyDir: {}
+      - name: tmp
+        emptyDir: {}
+
