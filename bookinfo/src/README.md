@@ -7,3 +7,4 @@ configmap/productpage-html created
 [root@ip-172-31-36-236 productpage-custom-files]# kubectl create cm productpage --from-file=./productpage.py
 configmap/productpage created
 
+Note: Create external service for PostgreSQL DB but  No need for mongodb 
